@@ -1,6 +1,5 @@
 "use client";
-import React, { useState } from 'react';
-import memesData from '../memesData.js';
+import React from 'react';
 import Image from 'next/image'
 
 export default function Meme() {
@@ -8,16 +7,21 @@ export default function Meme() {
   const [meme, setMeme] = React.useState({
     topText: '',
     bottomText: '',
-    randomImage: 'http://i.imgflip.com/1bij.jpg'
+    randomImage: 'https://i.imgflip.com/1bh9.jpg'
   });
-  const [allMemeImages, setAllMemeImages] = React.useState(memesData);
+  const [allMeme, setAllMeme] = React.useState([]);
+
+  React.useEffect(async () => {
+    const res = await fetch('https://api.imgflip.com/get_memes');
+    const data = await res.json()
+    setAllMeme(data.data.memes);
+  }, []);
 
 
   // whenever button click randomize the image
   function getImage() {
-    const memeArr = memesData.data.memes;
-    const randomNumber = Math.floor(Math.random() * memeArr.length);
-    const url = memeArr[randomNumber].url;
+    const randomNumber = Math.floor(Math.random() * allMeme.length);
+    const url = allMeme[randomNumber].url;
     setMeme(prevMeme => ({
       ...prevMeme,
       randomImage: url
@@ -41,14 +45,14 @@ export default function Meme() {
           name="topText"
           value={meme.topText}
           onChange={handleChange}
-          placeholder='Shut up'          
+          placeholder='Top text'          
         />
         <input
           className='row-span-1 col-span-1 border-2 rounded indent-1.5'
           type="text" name="bottomText"
           value={meme.bottomText}
           onChange={handleChange}
-          placeholder='and take my money'           
+          placeholder='Bottom text'           
         />    
         <button
           className='row-span-2 col-span-2 text-white rounded'
@@ -64,10 +68,12 @@ export default function Meme() {
           className='max-w-full max-h-full mt-5 mx-auto rounded'
           width={500}
           height={600}
+          draggable='false'
           alt='meme'
         />
         <h2
           className="absolute w-4/5 top-10 text-center left-1/2 transform -translate-x-1/2 text-xl font-bold text-white pointer-events-none"
+          draggable='true'
           style={{ textShadow: '2px 2px 2px rgba(0, 0, 0, 0.7)' }}
         >
           {meme.topText}
