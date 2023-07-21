@@ -11,7 +11,6 @@ export default function Header() {
         className='w-8 h-full mr-1.5'
         alt='troll' />
       <h2 className='text-xl mr-auto'>Meme Generator</h2>
-      <h4 className='font-xs font-medium'>React Course - Project 3</h4>
     </header>
   )
 }
